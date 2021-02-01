@@ -118,7 +118,19 @@ module.exports = (oasDoc) => {
                 if (!req.user) {
                     req.user = {};
                 }
-                req.user.role = decoded.role || "anonymous";
+                let userRoles = [];
+                if (Array.isArray(decoded.role)) {
+                    for (let role of decoded.role) {
+                        if (role in config.grantsFile[secName]) {
+                            userRoles.push(role);
+                        }
+                    }
+                } else {
+                    if (decoded.role in config.grantsFile[secName]) {
+                        userRoles.push(role);
+                    }
+                }
+                req.user.role = userRoles || "anonymous";
                 req.user[userProperty] = decoded[userProperty] || "";
                 var middleware = accessControlMiddleware.check(checkObject);
                 middleware(req, res, next);
