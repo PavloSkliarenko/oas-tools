@@ -130,6 +130,7 @@ module.exports = (oasDoc) => {
                         userRoles.push(role);
                     }
                 }
+				userRoles = userRoles === [] ? undefined : userRoles; 
                 req.user.role = userRoles || "anonymous";
                 req.user[userProperty] = decoded[userProperty] || "";
                 var middleware = accessControlMiddleware.check(checkObject);
